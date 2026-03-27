@@ -1,1 +1,1 @@
-# ALU-8bits
+# ALU 8 bits
