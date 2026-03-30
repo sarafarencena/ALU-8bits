@@ -110,4 +110,79 @@ Implementa subtração usando o mesmo Somador de 8 bits por meio do Complemento 
 | 20  | 5   | 1   | A - B    | 15   | Subtração |
 | 10  | 20  | 1   | A - B    | 246  | Resultado negativo (-10 em signed) |
 
+## 4. Multiplicador de 8 bits
+ 
+O multiplicador recebe dois operandos de 8 bits, sendo eles:
+-  **AC** (multiplicando)
+- **N** (multiplicador)
+
+E produz um resultado de 16 bits dividido em duas saídas:
+- **AC_out** (8 bits menos significativos)
+- **MQ_out** (8 bits mais significativos).
+
+O circuito implementa multiplicação binária combinacional pelo método shift-and-add, que replica o processo de multiplicação no papel: para cada bit de N, soma-se AC deslocado para a esquerda pela posição daquele bit.
+ 
+### Separação de N
+ 
+A entrada N é dividida em 8 bits individuais (N0 a N7) por um Distribuidor.
+ 
+### Produtos parciais via AND
+ 
+Para cada bit Ni, um broadcast replica esse bit 8 vezes, formando um barramento de 8 bits. Esse barramento entra em uma porta AND de 8 bits junto com AC:
+ 
+- Se Ni = 1, a AND retorna AC inteiro
+- Se Ni = 0, a AND retorna zeros
+ 
+Isso gera 8 produtos parciais de 8 bits, um por bit de N.
+ 
+### Posicionamento em 16 bits (shift left)
+ 
+Cada produto parcial passa por um Distribuidor que o insere na posição correta dentro de um barramento de 16 bits, preenchendo o restante com zeros. A configuração muda a cada estágio para simular o deslocamento:
+ 
+| Produto | Configuração do Distribuidor | Efeito |
+|---------|------------------------------|--------|
+| PP0 | 8,8 → 16 | sem deslocamento |
+| PP1 | 1,8,7 → 16 | shift left 1 |
+| PP2 | 2,8,6 → 16 | shift left 2 |
+| PP3 | 3,8,5 → 16 | shift left 3 |
+| PP4 | 4,8,4 → 16 | shift left 4 |
+| PP5 | 5,8,3 → 16 | shift left 5 |
+| PP6 | 6,8,2 → 16 | shift left 6 |
+| PP7 | 7,8,1 → 16 | shift left 7 |
+ 
+O shift left acontece pela posição do fio dentro do barramento — sem nenhum componente adicional de deslocamento.
+ 
+### Soma em cascata
+ 
+Os 8 produtos parciais de 16 bits são somados em sequência por 7 instâncias do `soma_16bits`:
+ 
+```
+SOM1: PP0 + PP1 → R1
+SOM2: R1  + PP2 → R2
+SOM3: R2  + PP3 → R3
+SOM4: R3  + PP4 → R4
+SOM5: R4  + PP5 → R5
+SOM6: R5  + PP6 → R6
+SOM7: R6  + PP7 → Resultado final (16 bits)
+```
+ 
+### Divisão do resultado
+ 
+Um Distribuidor final separa o resultado de 16 bits:
+ 
+- Bits 0–7 → **AC_out**
+- Bits 8–15 → **MQ_out**
+ 
+ 
+## Casos de teste
+ 
+| AC | N | Resultado | AC_out esperado | MQ_out esperado |
+|----|---|-----------|-----------------|-----------------|
+| 5  | 3 | 15        | 15              | 0               |
+| 16 | 16 | 256      | 0               | 1               |
+ 
+O segundo caso (16 × 16 = 256) é especialmente útil pois o resultado cruza a fronteira entre AC_out e MQ_out, validando que a divisão final está correta. Como 256 = 2⁸, o único bit 1 fica exatamente na posição 8 — que pertence a MQ_out.
+
+---
+
 Acesse [aqui](https://drive.google.com/drive/folders/1XJji9Yzx_nmVaWa0aK6dnY-uWFvmWiFX?usp=sharing) o drive do projeto.
