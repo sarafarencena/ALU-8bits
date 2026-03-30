@@ -1,8 +1,10 @@
 # ALU 8 bits
 
-## Vídeo Demonstrativo
+## Vídeos Demonstrativos
 
-Clique [aqui](https://drive.google.com/file/d/1cZZ8Wo0065HitNznaCnbhJr6h3rzmtDr/view?usp=sharing) para visualizar o vídeo de demonstração dos circuitos de somadores (1 e 8 bits) e subtrator (8 bits). Clique [aqui](https://drive.google.com/file/d/1TRvcSZZhoU6Z6audIx-Jgsx_4Kjzwab_/view?usp=sharing) visualizar o vídeo de demonstração do circuito de multiplicador de 8 bits.
+Clique [aqui](https://drive.google.com/file/d/1cZZ8Wo0065HitNznaCnbhJr6h3rzmtDr/view?usp=sharing) para visualizar o vídeo de demonstração dos circuitos de somadores (1 e 8 bits) e subtrator (8 bits).
+
+Clique [aqui](https://drive.google.com/file/d/1TRvcSZZhoU6Z6audIx-Jgsx_4Kjzwab_/view?usp=sharing) visualizar o vídeo de demonstração do circuito de multiplicador de 8 bits.
 
 ## 1. Somador Completo de 1 Bit
 
